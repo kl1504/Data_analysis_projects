@@ -1,8 +1,4 @@
-# ╔══════════════════════════════════════════════════════════════════╗
-# ║              TARDIS — SNCF Delay Intelligence Platform          ║
-# ║              Dashboard Streamlit — Version 2.0                  ║
-# ╚══════════════════════════════════════════════════════════════════╝
-
+#TARDIS — SNCF Delay Prediction Platform          
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -13,9 +9,7 @@ import joblib
 import warnings
 warnings.filterwarnings("ignore")
 
-# ─────────────────────────────────────────────
-#  CONFIG PAGE
-# ─────────────────────────────────────────────
+#  Page configuration
 st.set_page_config(
     page_title="TARDIS · SNCF Analytics",
     page_icon="🚄",
@@ -23,9 +17,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ─────────────────────────────────────────────
 #  THEME & CSS CUSTOM
-# ─────────────────────────────────────────────
 st.markdown("""
 <style>
 /* ── Global ── */
@@ -119,9 +111,7 @@ html, body, [class*="css"] {
 </style>
 """, unsafe_allow_html=True)
 
-# ─────────────────────────────────────────────
 #  CONSTANTS & MAPS
-# ─────────────────────────────────────────────
 MONTH_ORDER = [
     "January","February","March","April","May","June",
     "July","August","September","October","November","December"
@@ -168,10 +158,8 @@ ACCENT    = "#38bdf8"
 RED_COLOR = "#f87171"
 AMBER     = "#fbbf24"
 
-# ─────────────────────────────────────────────
 #  DATA LOADING
-# ─────────────────────────────────────────────
-@st.cache_data(show_spinner="📦 Loading dataset…")
+@st.cache_data(show_spinner="Loading data...")
 def load_data():
     df = pd.read_csv("cleaned_dataset.csv")
     df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
@@ -179,7 +167,7 @@ def load_data():
     df["Days"]   = pd.Categorical(df["Days"],   categories=DAY_ORDER,   ordered=True)
     return df
 
-@st.cache_resource(show_spinner="🤖 Loading model…")
+@st.cache_resource(show_spinner="Loading model…")
 def load_model():
     try:
         bundle = joblib.load("model.joblib")
@@ -190,9 +178,7 @@ def load_model():
 df = load_data()
 model, station_encoder = load_model()
 
-# ─────────────────────────────────────────────
 #  SIDEBAR
-# ─────────────────────────────────────────────
 with st.sidebar:
     st.markdown("""
     <div style='text-align:center;padding:20px 0 28px'>
@@ -229,11 +215,9 @@ with st.sidebar:
     pred_year   = st.selectbox("Year",            sorted(df["Years"].unique(), reverse=True))
 
     st.divider()
-    st.caption("v2.0 · Built with ❤️ by Tardis team")
+    st.caption("Built by Kael")
 
-# ─────────────────────────────────────────────
 #  FILTERED DATAFRAME
-# ─────────────────────────────────────────────
 mask = (
     df["Service"].isin(sel_service) &
     df["Years"].between(sel_years[0], sel_years[1]) &
@@ -241,13 +225,11 @@ mask = (
 )
 dff = df[mask].copy()
 
-# ─────────────────────────────────────────────
 #  HEADER
-# ─────────────────────────────────────────────
 st.markdown("""
 <div style='padding: 24px 0 8px'>
   <h1 style='margin:0;font-size:2rem;font-weight:700;color:#f1f5f9'>
-    🚄 SNCF Train Delay Intelligence
+    🚄 SNCF Train Delay Prediction
   </h1>
   <p style='color:#64748b;margin:4px 0 0'>
     Real-time analytics & AI-powered delay prediction · French high-speed rail network
@@ -255,9 +237,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ─────────────────────────────────────────────
 #  KPI ROW
-# ─────────────────────────────────────────────
 total_trains    = int(dff["Number of scheduled trains"].sum())
 total_cancelled = int(dff["Number of cancelled trains"].sum())
 avg_delay       = dff["Average delay of all trains at arrival"].mean()
@@ -286,17 +266,13 @@ with k5: kpi(k5, f"{pct_major:.1f}%", "Major Delays",
 
 st.markdown("<div style='margin-top:8px'></div>", unsafe_allow_html=True)
 
-# ─────────────────────────────────────────────
 #  TABS
-# ─────────────────────────────────────────────
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "📊 Overview", "🗺️ Stations", "📅 Time Analysis",
     "⚙️ Delay Causes", "🤖 Prediction"
 ])
 
-# ══════════════════════════════════════════════
 #  TAB 1 — OVERVIEW
-# ══════════════════════════════════════════════
 with tab1:
     c1, c2 = st.columns(2)
 
@@ -371,9 +347,7 @@ with tab1:
                        yaxis_title="Frequency")
     st.plotly_chart(fig4, use_container_width=True)
 
-# ══════════════════════════════════════════════
 #  TAB 2 — STATIONS
-# ══════════════════════════════════════════════
 with tab2:
     c1, c2 = st.columns(2)
 
@@ -448,9 +422,7 @@ with tab2:
     fig4.update_layout(**PLOTLY_THEME, height=380)
     st.plotly_chart(fig4, use_container_width=True)
 
-# ══════════════════════════════════════════════
 #  TAB 3 — TIME ANALYSIS
-# ══════════════════════════════════════════════
 with tab3:
     c1, c2 = st.columns(2)
 
@@ -523,9 +495,7 @@ with tab3:
     fig4.update_layout(**PLOTLY_THEME, height=350, coloraxis_colorbar=dict(title="min"))
     st.plotly_chart(fig4, use_container_width=True)
 
-# ══════════════════════════════════════════════
 #  TAB 4 — DELAY CAUSES
-# ══════════════════════════════════════════════
 with tab4:
     c1, c2 = st.columns(2)
 
@@ -602,14 +572,12 @@ with tab4:
                        xaxis=dict(range=[-0.5, 0.5]))
     st.plotly_chart(fig4, use_container_width=True)
 
-# ══════════════════════════════════════════════
 #  TAB 5 — PREDICTION
-# ══════════════════════════════════════════════
 with tab5:
     st.markdown("""
     <div style='background:linear-gradient(135deg,#1e3a5f,#1e293b);border:1px solid #334155;
          border-radius:16px;padding:20px 24px;margin-bottom:24px'>
-      <h3 style='color:#38bdf8;margin:0 0 6px'>🤖 AI Delay Predictor</h3>
+      <h3 style='color:#38bdf8;margin:0 0 6px'> Delay Predictor</h3>
       <p style='color:#94a3b8;margin:0;font-size:.9rem'>
         Enter operational parameters below and click <b style='color:#f1f5f9'>Predict Delay</b> 
         to get a real-time estimate powered by Random Forest.
@@ -776,9 +744,7 @@ with tab5:
             else:
                 st.info("No historical data available for this specific route combination.")
 
-# ─────────────────────────────────────────────
 #  FOOTER — Data Preview
-# ─────────────────────────────────────────────
 with st.expander("📁 Raw Dataset Preview (first 50 rows)", expanded=False):
     st.dataframe(
         dff.head(50).style.format(precision=2),
@@ -787,6 +753,6 @@ with st.expander("📁 Raw Dataset Preview (first 50 rows)", expanded=False):
 
 st.markdown("""
 <div style='text-align:center;color:#334155;padding:32px 0 16px;font-size:.78rem'>
-  TARDIS · SNCF Delay Intelligence Platform · v2.0 · MIT License
+  TARDIS · SNCF Delay Prediction Platform 
 </div>
 """, unsafe_allow_html=True)
