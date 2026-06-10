@@ -1,0 +1,15 @@
+[theme]
+primaryColor="#9A6BFF"
+backgroundColor="#0F1123"
+secondaryBackgroundColor="#1F212F"
+textColor="#FFFFFF"
+font="sans serif"
+ 
+[browser]
+gatherUsageStats = false
+ 
+[client]
+toolbarMode = "minimal"
+ 
+[ui]
+hideTopBar = false
