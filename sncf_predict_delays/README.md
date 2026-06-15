@@ -39,19 +39,19 @@ You can install the required libraries using the following command:
 
 1. Clone the repository:
     ```sh
-    git clone git@github.com:EpitechPGE1-2025/G-AIA-210-COT-2-1-tardis-1.git
-    cd G-AIA-210-COT-2-1-tardis-1
+    git@github.com:kl1504/Data_analysis_projects.git
+    cd Data_analysis_projects
     ```
 2. Launch the differents notebooks:
     ```sh
-    jupyter notebook tardis_eda.ipynb
-    jupyter notebook tardis_model.ipynb
+    jupyter notebook sncf_eda.ipynb
+    jupyter notebook sncf_model.ipynb
     ```
 4. Run the cells sequentially to generate the visualizations, analysis, and machine learning results.
 
 5. Visualize dashboard to predict delays:
     ```sh
-    streamlit run tardis_dashboard.py
+    streamlit run sncf_dashboard.py
     ```
 ## Contributors
 
