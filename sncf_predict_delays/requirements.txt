@@ -8,3 +8,10 @@ nbconvert
 joblib
 streamlit
 plotly
+scipy
+pillow
+pyparsing
+cycler
+kiwisolver
+narwhals
+threadpoolctl
